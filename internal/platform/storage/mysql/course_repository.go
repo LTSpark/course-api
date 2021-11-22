@@ -30,9 +30,9 @@ func (r *CourseRepository) Save(ctx context.Context, course mooc.Course) error {
 
 	// Build query using sqlbuilder ORM
 	query, args := courseSQLStruct.InsertInto(sqlCourseTable, sqlCourse{
-		ID:       course.ID(),
-		Name:     course.Name(),
-		Duration: course.Duration(),
+		ID:       course.ID().String(),
+		Name:     course.Name().String(),
+		Duration: course.Duration().String(),
 	}).Build()
 
 	// Execute query

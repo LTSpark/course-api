@@ -108,9 +108,9 @@ func (duration CourseDuration) String() string {
 
 // Data structure which represents a course
 type Course struct {
-	id       string
-	name     string
-	duration string
+	id       CourseID
+	name     CourseName
+	duration CourseDuration
 }
 
 // NewCourse creates a new course.
@@ -132,9 +132,9 @@ func NewCourse(id, name, duration string) (Course, error) {
 	}
 
 	return Course{
-		id:       idVO.String(),
-		name:     nameVO.String(),
-		duration: durationVO.String(),
+		id:       idVO,
+		name:     nameVO,
+		duration: durationVO,
 	}, nil
 
 }
@@ -145,16 +145,16 @@ type CourseRepository interface {
 }
 
 // ID returns the course unique identifier.
-func (c Course) ID() string {
+func (c Course) ID() CourseID {
 	return c.id
 }
 
 // Name returns the course name.
-func (c Course) Name() string {
+func (c Course) Name() CourseName {
 	return c.name
 }
 
 // Duration returns the course duration.
-func (c Course) Duration() string {
+func (c Course) Duration() CourseDuration {
 	return c.duration
 }
