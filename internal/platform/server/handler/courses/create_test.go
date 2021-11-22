@@ -29,8 +29,9 @@ func TestHandler_Create(t *testing.T) {
 
 	t.Run("given an invalid request it returns 400", func(t *testing.T) {
 		createRequest := createRequest{
-			ID:   "8a1c5cdc-ba57-445a-994d-aa412d23723f",
-			Name: "Failed Course",
+			ID:       "invalid-test",
+			Name:     "Failed Course",
+			Duration: "10m",
 		}
 
 		b, err := json.Marshal(createRequest)

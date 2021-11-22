@@ -6,7 +6,6 @@ import (
 	mooc "course-api/internal"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 )
 
 type createRequest struct {
@@ -26,14 +25,13 @@ func CreateHandler(courseRepository mooc.CourseRepository) gin.HandlerFunc {
 			return
 		}
 
-		// Generates uuid for database ID if ID is empty
-		if len(req.ID) > 0 {
-			uuid, _ := uuid.NewUUID()
-			req.ID = uuid.String()
+		// Calls mooc dependency
+		course, err := mooc.NewCourse(req.ID, req.Name, req.Duration)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, err.Error())
+			return
 		}
 
-		// Calls mooc dependency
-		course := mooc.NewCourse(req.ID, req.Name, req.Duration)
 		if err := courseRepository.Save(ctx, course); err != nil {
 			ctx.JSON(http.StatusInternalServerError, err.Error())
 			return
