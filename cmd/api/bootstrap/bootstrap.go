@@ -28,9 +28,11 @@ func Run() error {
 	}
 
 	courseRepository := mysql.NewCourseRepository(db)
+	userRepository := mysql.NewUserRepository(db)
 
 	creatingCourseService := creating.NewCourseService(courseRepository)
+	creatingUserService := creating.NewUserService(userRepository)
 
-	srv := server.New(host, port, creatingCourseService)
+	srv := server.New(host, port, creatingCourseService, creatingUserService)
 	return srv.Run()
 }

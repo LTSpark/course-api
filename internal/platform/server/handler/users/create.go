@@ -1,4 +1,4 @@
-package courses
+package users
 
 import (
 	"errors"
@@ -13,11 +13,12 @@ import (
 type createRequest struct {
 	ID       string `json:"id" binding:"required"`
 	Name     string `json:"name" binding:"required"`
-	Duration string `json:"duration" binding:"required"`
+	Email    string `json:"email" binding:"required"`
+	Password string `json:"password" binding:"required"`
 }
 
-// CreateHandler returns an HTTP handler for courses creation.
-func CreateHandler(creatingCourseService creating.CourseService) gin.HandlerFunc {
+// CreateHandler returns an HTTP handler for Users creation.
+func CreateHandler(creatingUserService creating.UserService) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var req createRequest
 
@@ -27,14 +28,14 @@ func CreateHandler(creatingCourseService creating.CourseService) gin.HandlerFunc
 			return
 		}
 
-		err := creatingCourseService.CreateCourse(ctx, req.ID, req.Name, req.Duration)
+		err := creatingUserService.CreateUser(ctx, req.ID, req.Name, req.Email, req.Password)
 		if err != nil {
 			switch {
-			case errors.Is(err, mooc.ErrInvalidCourseID),
-				errors.Is(err, mooc.ErrEmptyCourseName),
-				errors.Is(err, mooc.ErrEmptyDuration),
-				errors.Is(err, mooc.ErrInvalidArg),
-				errors.Is(err, mooc.ErrNotEnoughDurationArgs):
+			case errors.Is(err, mooc.ErrInvalidUserID),
+				errors.Is(err, mooc.ErrEmptyUserName),
+				errors.Is(err, mooc.ErrInvalidUserName),
+				errors.Is(err, mooc.ErrEmptyUserPassword),
+				errors.Is(err, mooc.ErrInvalidUserEmail):
 				ctx.JSON(http.StatusBadRequest, err.Error())
 				return
 			default:
@@ -43,6 +44,6 @@ func CreateHandler(creatingCourseService creating.CourseService) gin.HandlerFunc
 			}
 		}
 
-		ctx.String(http.StatusCreated, "Course created!")
+		ctx.String(http.StatusCreated, "User created!")
 	}
 }
