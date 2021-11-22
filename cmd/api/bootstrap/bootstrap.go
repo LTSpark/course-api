@@ -1,6 +1,7 @@
 package bootstrap
 
 import (
+	"course-api/internal/creating"
 	"course-api/internal/platform/server"
 	"course-api/internal/platform/storage/mysql"
 	"database/sql"
@@ -28,6 +29,8 @@ func Run() error {
 
 	courseRepository := mysql.NewCourseRepository(db)
 
-	srv := server.New(host, port, courseRepository)
+	creatingCourseService := creating.NewCourseService(courseRepository)
+
+	srv := server.New(host, port, creatingCourseService)
 	return srv.Run()
 }

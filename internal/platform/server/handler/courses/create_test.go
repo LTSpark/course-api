@@ -2,6 +2,7 @@ package courses
 
 import (
 	"bytes"
+	"course-api/internal/creating"
 	"course-api/internal/platform/storage/storagemocks"
 	"encoding/json"
 	"net/http"
@@ -20,12 +21,14 @@ func TestHandler_Create(t *testing.T) {
 	courseRepository := new(storagemocks.CourseRepository)
 	courseRepository.On("Save", mock.Anything, mock.AnythingOfType("mooc.Course")).Return(nil)
 
+	createCourseServ := creating.NewCourseService(courseRepository)
+
 	// Create gin server on test mode
 	gin.SetMode(gin.TestMode)
 	r := gin.New()
 
 	// Register test routes
-	r.POST("/courses", CreateHandler(courseRepository))
+	r.POST("/courses", CreateHandler(createCourseServ))
 
 	t.Run("given an invalid request it returns 400", func(t *testing.T) {
 		createRequest := createRequest{
