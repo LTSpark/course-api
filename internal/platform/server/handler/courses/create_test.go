@@ -30,11 +30,57 @@ func TestHandler_Create(t *testing.T) {
 	// Register test routes
 	r.POST("/courses", CreateHandler(createCourseServ))
 
-	t.Run("given an invalid request it returns 400", func(t *testing.T) {
+	t.Run("given an invalid course id it returns 400", func(t *testing.T) {
 		createRequest := createRequest{
 			ID:       "invalid-test",
 			Name:     "Failed Course",
-			Duration: "10m",
+			Duration: "10 months",
+		}
+
+		b, err := json.Marshal(createRequest)
+		require.NoError(t, err)
+
+		req, err := http.NewRequest(http.MethodPost, "/courses", bytes.NewBuffer(b))
+		require.NoError(t, err)
+
+		rec := httptest.NewRecorder()
+		r.ServeHTTP(rec, req)
+
+		res := rec.Result()
+		defer res.Body.Close()
+
+		assert.Equal(t, http.StatusBadRequest, res.StatusCode)
+
+	})
+
+	t.Run("given an empty course name it returns 400", func(t *testing.T) {
+		createRequest := createRequest{
+			ID:       "8a1c5cdc-ba57-445a-994d-aa412d23723f",
+			Name:     "",
+			Duration: "10 months",
+		}
+
+		b, err := json.Marshal(createRequest)
+		require.NoError(t, err)
+
+		req, err := http.NewRequest(http.MethodPost, "/courses", bytes.NewBuffer(b))
+		require.NoError(t, err)
+
+		rec := httptest.NewRecorder()
+		r.ServeHTTP(rec, req)
+
+		res := rec.Result()
+		defer res.Body.Close()
+
+		assert.Equal(t, http.StatusBadRequest, res.StatusCode)
+
+	})
+
+	t.Run("given an invalid duration it returns 400", func(t *testing.T) {
+		createRequest := createRequest{
+			ID:       "8a1c5cdc-ba57-445a-994d-aa412d23723f",
+			Name:     "Failed Course",
+			Duration: "10 centuries",
 		}
 
 		b, err := json.Marshal(createRequest)
