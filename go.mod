@@ -3,7 +3,6 @@ module course-api
 go 1.13
 
 require (
-	github.com/CodelyTV/go-hexagonal_http_api-course v0.0.0-20210224011950-bfd8a00f21ed
 	github.com/DATA-DOG/go-sqlmock v1.5.0
 	github.com/gin-gonic/gin v1.7.4
 	github.com/go-sql-driver/mysql v1.6.0

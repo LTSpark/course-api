@@ -28,6 +28,7 @@ func CreateHandler(creatingCourseService creating.CourseService) gin.HandlerFunc
 		}
 
 		err := creatingCourseService.CreateCourse(ctx, req.ID, req.Name, req.Duration)
+
 		if err != nil {
 			switch {
 			case errors.Is(err, mooc.ErrInvalidCourseID),
